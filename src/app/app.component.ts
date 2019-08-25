@@ -5,6 +5,7 @@ import { ProductAddComponent } from './product/product-add/product-add.component
 import { ProductDeleteComponent } from './product/product-delete/product-delete.component';
 import { MatDialog } from '@angular/material';
 import { ProductEditComponent } from './product/product-edit/product-edit.component';
+import { Observable } from 'rxjs/index';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ import { ProductEditComponent } from './product/product-edit/product-edit.compon
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  products: Product[];
+  products: Observable<Product[]>;
 
   constructor(
     private productService: ProductService,
@@ -20,10 +21,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.productService.get().subscribe((products: Product[]) => {
-      console.log(products);
-      this.products = products;
-    });
+    this.products = this.productService.get();
   }
 
   openAddDialog(): void {

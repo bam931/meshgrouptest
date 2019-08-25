@@ -11,7 +11,7 @@
   </thead>
   <tbody>
   <ng-container *ngIf="products">
-    <tr *ngFor="let product of products">
+    <tr *ngFor="let product of products | async">
       <td>{{product.getName()}}</td>
       <td>{{product.getPrice() | currency:'RUB':'₽':'1.2-2'}}</td>
       <td>
