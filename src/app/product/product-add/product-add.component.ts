@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from '../product';
 import { ProductService } from '../product.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Subject } from 'rxjs/index';
+import { takeUntil } from 'rxjs/internal/operators';
 
 @Component({
   selector: 'app-product-add',
@@ -11,6 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class ProductAddComponent implements OnInit {
   form: FormGroup;
+  destroy$ = new Subject();
 
   constructor(
     private fb: FormBuilder,
@@ -35,6 +38,10 @@ export class ProductAddComponent implements OnInit {
     }
 
     const newProduct: Product = new Product(this.form.get('name').value, this.form.get('price').value);
-    this.productService.add(newProduct).subscribe(() => this.dialogRef.close());
+    this.productService.add(newProduct).pipe(takeUntil(this.destroy$)).subscribe(() => this.dialogRef.close());
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
   }
 }
